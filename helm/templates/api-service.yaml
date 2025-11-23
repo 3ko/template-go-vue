@@ -1,0 +1,17 @@
+{{- if .Values.api.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mon-projet.fullname" . }}-api
+  labels:
+    {{- include "mon-projet.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.api.service.type }}
+  selector:
+    app: {{ include "mon-projet.fullname" . }}-api
+  ports:
+    - port: {{ .Values.api.service.port }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+{{- end }}

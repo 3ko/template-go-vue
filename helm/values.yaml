@@ -1,0 +1,61 @@
+api:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: your-registry/mon-projet-api
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+  env:
+    port: "8080"
+    db:
+      host: "mon-projet-postgres"
+      port: "5432"
+      name: "mydb"
+      user: "prod"
+    zitadel:
+      issuer: "https://your-tenant.zitadel.cloud"
+      audience: "your-api-audience"
+
+apiSecrets:
+  dbPassword: "prod"
+
+client:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: your-registry/mon-projet-client
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  env:
+    zitadelIssuer: "https://your-tenant.zitadel.cloud"
+    zitadelClientId: "your-frontend-client-id"
+
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
+  auth:
+    username: "prod"
+    password: "prod"
+    database: "mydb"
+  service:
+    port: 5432
+  storage:
+    size: 1Gi
+    storageClass: ""
+
+ingress:
+  enabled: false
+  className: "nginx"
+  host: "mon-projet.local"
+  tls:
+    enabled: false
+    secretName: ""

@@ -1,0 +1,29 @@
+{{- if .Values.client.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mon-projet.fullname" . }}-client
+  labels:
+    {{- include "mon-projet.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.client.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "mon-projet.fullname" . }}-client
+  template:
+    metadata:
+      labels:
+        app: {{ include "mon-projet.fullname" . }}-client
+    spec:
+      containers:
+        - name: client
+          image: "{{ .Values.client.image.repository }}:{{ .Values.client.image.tag }}"
+          imagePullPolicy: {{ .Values.client.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: VITE_ZITADEL_ISSUER
+              value: {{ .Values.client.env.zitadelIssuer | quote }}
+            - name: VITE_ZITADEL_CLIENT_ID
+              value: {{ .Values.client.env.zitadelClientId | quote }}
+{{- end }}

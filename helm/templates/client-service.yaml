@@ -1,0 +1,17 @@
+{{- if .Values.client.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mon-projet.fullname" . }}-client
+  labels:
+    {{- include "mon-projet.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.client.service.type }}
+  selector:
+    app: {{ include "mon-projet.fullname" . }}-client
+  ports:
+    - port: {{ .Values.client.service.port }}
+      targetPort: 80
+      protocol: TCP
+      name: http
+{{- end }}

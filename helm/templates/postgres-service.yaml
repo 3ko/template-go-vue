@@ -1,0 +1,16 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mon-projet.fullname" . }}-postgres
+  labels:
+    {{- include "mon-projet.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.postgres.service.port }}
+      targetPort: 5432
+      name: postgres
+  selector:
+    app: {{ include "mon-projet.fullname" . }}-postgres
+{{- end }}

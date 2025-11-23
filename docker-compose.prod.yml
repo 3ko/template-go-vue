@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: prod-db
+    environment:
+      POSTGRES_USER: prod
+      POSTGRES_PASSWORD: prod
+      POSTGRES_DB: mydb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+      target: prod
+    container_name: prod-api
+    environment:
+      PORT: 8080
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: prod
+      DB_PASSWORD: prod
+      DB_NAME: mydb
+      ZITADEL_ISSUER: ${ZITADEL_ISSUER}
+      ZITADEL_AUDIENCE: ${ZITADEL_AUDIENCE}
+    depends_on:
+      - db
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+      target: prod
+    container_name: prod-client
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  db_data:
