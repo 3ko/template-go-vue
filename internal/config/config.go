@@ -3,16 +3,23 @@ package config
 import "os"
 
 type Config struct {
-    Port string
+	Port      string
+	StaticDir string
 }
 
 func Load() Config {
-    port := os.Getenv("PORT")
-    if port == "" {
-        port = "8080"
-    }
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
-    return Config{
-        Port: port,
-    }
+	staticDir := os.Getenv("STATIC_DIR")
+	if staticDir == "" {
+		staticDir = "./client/dist"
+	}
+
+	return Config{
+		Port:      port,
+		StaticDir: staticDir,
+	}
 }

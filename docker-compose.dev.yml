@@ -36,22 +36,5 @@ services:
     depends_on:
       - db
 
-  client:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-      target: dev
-    container_name: dev-client
-    working_dir: /app/client
-    environment:
-      VITE_ZITADEL_ISSUER: ${ZITADEL_ISSUER}
-      VITE_ZITADEL_CLIENT_ID: ${VITE_ZITADEL_CLIENT_ID}
-    volumes:
-      - ./client:/app/client
-    ports:
-      - "5173:5173"
-    depends_on:
-      - api
-
 volumes:
   db_data:
