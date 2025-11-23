@@ -17,6 +17,8 @@ services:
       dockerfile: Dockerfile.api
       target: prod
     container_name: prod-api
+    ports:
+      - "80:8080"
     environment:
       PORT: 8080
       DB_HOST: db
@@ -28,17 +30,6 @@ services:
       ZITADEL_AUDIENCE: ${ZITADEL_AUDIENCE}
     depends_on:
       - db
-
-  client:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-      target: prod
-    container_name: prod-client
-    ports:
-      - "80:80"
-    depends_on:
-      - api
 
 volumes:
   db_data:

@@ -1,4 +1,13 @@
 # Base image
+FROM node:20-alpine AS client-builder
+WORKDIR /app/client
+
+COPY client/package*.json ./
+RUN npm install
+
+COPY client/ ./
+RUN npm run build
+
 FROM golang:1.22-alpine AS base
 RUN apk add --no-cache git ca-certificates && update-ca-certificates
 WORKDIR /app
@@ -15,6 +24,8 @@ RUN go build -o /bin/api ./cmd/api
 
 FROM base AS dev
 RUN go install github.com/air-verse/air@latest
+COPY --from=client-builder /app/client/dist /app/static
+ENV STATIC_DIR=/app/static
 EXPOSE 8080
 CMD ["air", "-c", ".air.toml"]
 
@@ -22,6 +33,8 @@ FROM alpine:3.20 AS prod
 RUN apk add --no-cache ca-certificates && update-ca-certificates
 WORKDIR /app
 COPY --from=builder /bin/api /app/api
+COPY --from=client-builder /app/client/dist /app/static
 EXPOSE 8080
 ENV PORT=8080
+ENV STATIC_DIR=/app/static
 CMD ["/app/api"]

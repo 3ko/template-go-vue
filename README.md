@@ -14,3 +14,12 @@ Une API sécurisée illustre un CRUD simple sur des utilisateurs :
 - `DELETE /api/secure/users/:id` : supprime un utilisateur.
 
 Toutes les routes nécessitent l'authentification via Zitadel (middlewares configurés dans `internal/http/router.go`).
+
+## Build & livraison du frontend
+
+Le binaire Go sert désormais directement le bundle Vue généré par Vite :
+
+- le `Dockerfile.api` contient une étape Node qui exécute `npm run build` dans `client/` et copie le dossier `dist/` dans l'image finale ;
+- le serveur Gin expose les fichiers statiques et renvoie `index.html` pour les routes hors `/api`, ce qui évite l'usage de Nginx.
+
+En développement comme en production, un seul conteneur `api` est nécessaire : les services `client` ont été supprimés des fichiers `docker-compose.*`. Le port 8080 sert à la fois l'API (`/api/...`) et l'interface Vue (racine et routes SPA).

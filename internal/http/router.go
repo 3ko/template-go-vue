@@ -1,6 +1,10 @@
 package http
 
 import (
+	"net/http"
+	"path/filepath"
+	"strings"
+
 	"mon-projet/internal/config"
 	"mon-projet/internal/http/handlers"
 	"mon-projet/internal/http/middleware"
@@ -38,6 +42,24 @@ func NewRouter(cfg config.Config) *gin.Engine {
 	admin.Use(middleware.AuthZitadel(), middleware.RequireRole("admin"))
 	{
 		admin.GET("/stats", handlers.AdminStatsHandler)
+	}
+
+	if cfg.StaticDir != "" {
+		staticIndex := filepath.Join(cfg.StaticDir, "index.html")
+
+		r.Static("/assets", filepath.Join(cfg.StaticDir, "assets"))
+		r.GET("/", func(c *gin.Context) {
+			c.File(staticIndex)
+		})
+
+		r.NoRoute(func(c *gin.Context) {
+			if strings.HasPrefix(c.Request.URL.Path, "/api") {
+				c.JSON(http.StatusNotFound, gin.H{"error": "route not found"})
+				return
+			}
+
+			c.File(staticIndex)
+		})
 	}
 
 	return r
