@@ -2,3 +2,15 @@
 
 Projet généré automatiquement : backend Go + frontend Vue + Docker + Helm.
 Voir les fichiers pour les détails.
+
+## API d'exemple (CRUD)
+
+Une API sécurisée illustre un CRUD simple sur des utilisateurs :
+
+- `GET /api/secure/users` : liste les utilisateurs.
+- `POST /api/secure/users` : crée un utilisateur (`email`, `name`).
+- `GET /api/secure/users/:id` : retourne un utilisateur par identifiant.
+- `PUT /api/secure/users/:id` : met à jour un utilisateur existant.
+- `DELETE /api/secure/users/:id` : supprime un utilisateur.
+
+Toutes les routes nécessitent l'authentification via Zitadel (middlewares configurés dans `internal/http/router.go`).
