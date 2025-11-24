@@ -1,14 +1,14 @@
-package http
+package api
 
 import (
 	"net/http"
 	"path/filepath"
 	"strings"
 
+	"mon-projet/internal/api/handlers"
+	"mon-projet/internal/api/middleware"
 	"mon-projet/internal/config"
-	"mon-projet/internal/http/handlers"
-	"mon-projet/internal/http/middleware"
-	"mon-projet/internal/repository"
+	"mon-projet/internal/db"
 	"mon-projet/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -17,9 +17,9 @@ import (
 func NewRouter(cfg config.Config) *gin.Engine {
 	r := gin.Default()
 
-	db := repository.Connect()
+	database := db.Connect()
 
-	userRepo := repository.NewUserRepository(db)
+	userRepo := db.NewUserRepository(database)
 	userService := service.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
 	configService := service.NewConfigService(userService)

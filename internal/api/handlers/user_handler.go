@@ -3,7 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"errors"
-	"mon-projet/internal/domain"
+	"mon-projet/internal/model"
 	"mon-projet/internal/service"
 	"net/http"
 	"strconv"
@@ -29,7 +29,7 @@ func (h *UserHandler) GetAll(c *gin.Context) {
 }
 
 func (h *UserHandler) Create(c *gin.Context) {
-	var u domain.User
+	var u model.User
 	if err := c.ShouldBindJSON(&u); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -71,7 +71,7 @@ func (h *UserHandler) Update(c *gin.Context) {
 		return
 	}
 
-	var u domain.User
+	var u model.User
 	if err := c.ShouldBindJSON(&u); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
