@@ -3,7 +3,7 @@ package utils
 import (
     "time"
 
-    "github.com/MicahParks/keyfunc"
+    "github.com/MicahParks/keyfunc/v3"
 )
 
 var jwksCache *keyfunc.JWKS
