@@ -1,4 +1,4 @@
-package domain
+package model
 
 // DatabaseConfig encapsulates connection details for a data source.
 type DatabaseConfig struct {

@@ -4,26 +4,26 @@ import (
 	"os"
 	"sync"
 
-	"mon-projet/internal/domain"
+	"mon-projet/internal/model"
 )
 
 // ConfigService centralizes runtime configuration and aggregates operational insights.
 type ConfigService struct {
 	mu          sync.RWMutex
-	config      domain.ApplicationConfig
+	config      model.ApplicationConfig
 	userService *UserService
 }
 
 // NewConfigService builds a configuration service with sane defaults hydrated from the environment.
 func NewConfigService(userService *UserService) *ConfigService {
-	cfg := domain.ApplicationConfig{
-		Database: domain.DatabaseConfig{
+	cfg := model.ApplicationConfig{
+		Database: model.DatabaseConfig{
 			Host: envOrDefault("DB_HOST", "localhost"),
 			Name: envOrDefault("DB_NAME", "app"),
 			User: envOrDefault("DB_USER", "admin"),
 			Port: envOrDefault("DB_PORT", "5432"),
 		},
-		Auth: domain.AuthProviderConfig{
+		Auth: model.AuthProviderConfig{
 			Issuer:      envOrDefault("ZITADEL_ISSUER", "https://example.zitadel.cloud"),
 			ClientID:    envOrDefault("ZITADEL_CLIENT_ID", "client-id"),
 			RedirectURL: envOrDefault("ZITADEL_REDIRECT", "http://localhost:5173/callback"),
@@ -39,7 +39,7 @@ func NewConfigService(userService *UserService) *ConfigService {
 }
 
 // GetConfiguration returns the current configuration along with dynamic details such as active users.
-func (s *ConfigService) GetConfiguration() (domain.ApplicationConfig, error) {
+func (s *ConfigService) GetConfiguration() (model.ApplicationConfig, error) {
 	s.mu.RLock()
 	base := s.config
 	s.mu.RUnlock()
@@ -50,7 +50,7 @@ func (s *ConfigService) GetConfiguration() (domain.ApplicationConfig, error) {
 
 	users, err := s.userService.GetAll()
 	if err != nil {
-		return domain.ApplicationConfig{}, err
+		return model.ApplicationConfig{}, err
 	}
 
 	base.ActiveUsers = users
@@ -58,7 +58,7 @@ func (s *ConfigService) GetConfiguration() (domain.ApplicationConfig, error) {
 }
 
 // UpdateConfiguration applies incoming configuration updates, preserving unspecified fields.
-func (s *ConfigService) UpdateConfiguration(update domain.ApplicationConfig) (domain.ApplicationConfig, error) {
+func (s *ConfigService) UpdateConfiguration(update model.ApplicationConfig) (model.ApplicationConfig, error) {
 	s.mu.Lock()
 	if update.Database.Host != "" {
 		s.config.Database.Host = update.Database.Host

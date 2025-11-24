@@ -13,7 +13,7 @@ Une API sécurisée illustre un CRUD simple sur des utilisateurs :
 - `PUT /api/secure/users/:id` : met à jour un utilisateur existant.
 - `DELETE /api/secure/users/:id` : supprime un utilisateur.
 
-Toutes les routes nécessitent l'authentification via Zitadel (middlewares configurés dans `internal/http/router.go`).
+Toutes les routes nécessitent l'authentification via Zitadel (middlewares configurés dans `internal/api/router.go`).
 
 ## Build & livraison du frontend
 

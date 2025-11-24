@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"mon-projet/internal/domain"
+	"mon-projet/internal/model"
 	"mon-projet/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +29,7 @@ func (h *ConfigHandler) GetConfiguration(c *gin.Context) {
 }
 
 func (h *ConfigHandler) UpdateConfiguration(c *gin.Context) {
-	var payload domain.ApplicationConfig
+	var payload model.ApplicationConfig
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

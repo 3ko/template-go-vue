@@ -1,31 +1,31 @@
 package service
 
 import (
-	"mon-projet/internal/domain"
-	"mon-projet/internal/repository"
+	"mon-projet/internal/db"
+	"mon-projet/internal/model"
 )
 
 type UserService struct {
-	repo *repository.UserRepository
+	repo *db.UserRepository
 }
 
-func NewUserService(repo *repository.UserRepository) *UserService {
+func NewUserService(repo *db.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) GetAll() ([]domain.User, error) {
+func (s *UserService) GetAll() ([]model.User, error) {
 	return s.repo.FindAll()
 }
 
-func (s *UserService) Create(u domain.User) error {
+func (s *UserService) Create(u model.User) error {
 	return s.repo.Create(u)
 }
 
-func (s *UserService) GetByID(id int64) (domain.User, error) {
+func (s *UserService) GetByID(id int64) (model.User, error) {
 	return s.repo.FindByID(id)
 }
 
-func (s *UserService) Update(id int64, u domain.User) error {
+func (s *UserService) Update(id int64, u model.User) error {
 	return s.repo.Update(id, u)
 }
 
