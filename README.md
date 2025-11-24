@@ -3,6 +3,36 @@
 Projet généré automatiquement : backend Go + frontend Vue + Docker + Helm.
 Voir les fichiers pour les détails.
 
+## Démarrage rapide en développement
+
+### Avec Docker
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+Cette commande démarre PostgreSQL et l'API Go avec hot-reload (Air) tout en servant le bundle Vue précompilé.
+
+### Sans Docker
+
+Backend (Go) :
+
+```bash
+go run ./cmd/api
+```
+
+Assurez-vous d'avoir défini les variables d'environnement attendues (`PORT`, `DB_*`, `ZITADEL_*`).
+
+Frontend (Vue 3 / Vite) :
+
+```bash
+cd client
+npm install   # première fois uniquement
+npm run dev
+```
+
+Le serveur Vite est accessible sur le port indiqué par la sortie (`http://localhost:5173` par défaut).
+
 ## API d'exemple (CRUD)
 
 Une API sécurisée illustre un CRUD simple sur des utilisateurs :
