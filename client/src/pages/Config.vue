@@ -124,12 +124,14 @@
 
         <div class="space-y-2">
           <h3 class="text-lg font-semibold">Métadonnées (JSON)</h3>
-          <textarea
-            v-model="metadataText"
-            rows="4"
-            class="w-full px-3 py-2 border rounded-lg font-mono text-sm"
-            placeholder="{\n  \"env\": \"dev\"\n}"
-          />
+            <textarea
+              v-model="metadataText"
+              rows="4"
+              class="w-full px-3 py-2 border rounded-lg font-mono text-sm"
+              placeholder='{
+  "env": "dev"
+}'
+            />
           <p class="text-sm text-gray-500">
             Les métadonnées permettent d'ajouter des paires clé/valeur additionnelles.
           </p>
