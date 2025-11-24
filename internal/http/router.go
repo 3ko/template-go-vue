@@ -22,10 +22,15 @@ func NewRouter(cfg config.Config) *gin.Engine {
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
+	configService := service.NewConfigService(userService)
+	configHandler := handlers.NewConfigHandler(configService)
 
 	r.GET("/api/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
+
+	r.GET("/api/config", configHandler.GetConfiguration)
+	r.PUT("/api/config", configHandler.UpdateConfiguration)
 
 	secure := r.Group("/api/secure")
 	secure.Use(middleware.AuthZitadel())
@@ -42,6 +47,8 @@ func NewRouter(cfg config.Config) *gin.Engine {
 	admin.Use(middleware.AuthZitadel(), middleware.RequireRole("admin"))
 	{
 		admin.GET("/stats", handlers.AdminStatsHandler)
+		admin.GET("/config", configHandler.GetConfiguration)
+		admin.PUT("/config", configHandler.UpdateConfiguration)
 	}
 
 	if cfg.StaticDir != "" {

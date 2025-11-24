@@ -17,10 +17,9 @@ import { useAuthStore } from "../stores/auth";
 const router = useRouter();
 const auth = useAuthStore();
 
-auth.init();
-
 onMounted(async () => {
   try {
+    await auth.init();
     const redirect = await auth.handleCallback();
     router.push(redirect);
   } catch (e) {

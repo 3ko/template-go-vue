@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { createOIDCHandler } from "../utils/oidc";
+import { useConfigStore } from "./config";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -20,12 +21,18 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
-    init() {
+    async init() {
       if (this.handler) return;
+
+      const configStore = useConfigStore();
+      const config = configStore.config || (await configStore.load());
+      const authConfig = config?.auth || {};
+
       this.handler = createOIDCHandler({
-        issuer: import.meta.env.VITE_ZITADEL_ISSUER,
-        clientId: import.meta.env.VITE_ZITADEL_CLIENT_ID,
-        redirectUri: window.location.origin + "/callback",
+        issuer: authConfig.issuer || import.meta.env.VITE_ZITADEL_ISSUER,
+        clientId: authConfig.clientId || import.meta.env.VITE_ZITADEL_CLIENT_ID,
+        redirectUri:
+          authConfig.redirectUrl || window.location.origin + "/callback",
         scope: "openid email profile"
       });
     },
